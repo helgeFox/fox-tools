@@ -2,7 +2,7 @@ const Conf = require('conf');
 const exec = require('child_process').exec;
 const chalk = require('chalk');
 
-const {findInstance, findTemplate} = require('./lib');
+const {findInstance, findTemplate, findLocal} = require('./lib');
 
 const config = new Conf();
 
@@ -21,6 +21,7 @@ const openExplorer = function (result) {
 exports = module.exports = {
     findInstance,
     findTemplate,
+    findLocal,
     config,
     openExplorer
 }

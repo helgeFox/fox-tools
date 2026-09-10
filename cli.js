@@ -6,7 +6,7 @@ const yargs = require('yargs/yargs');
 const decompress = require('decompress');
 const path = require('path');
 
-const {findInstance, findTemplate, config, openExplorer} = require('.');
+const {findInstance, findTemplate, findLocal, config, openExplorer} = require('.');
 
 function handleInstanceCommand(params) {
     if (params.verbose)
@@ -59,7 +59,42 @@ function handleTemplateCommand(params) {
                     .then(_ => unzipPath);
             }
             else if (params.unpack) {
-                console.warn('Did not unpack instance! Missing config value for <unpackPath>');
+                console.warn('Did not unpack template! Missing config value for <unpackPath>');
+            }
+            return idmlPath;
+        })
+        .then(pathToOpen => {
+            if (params.verbose)
+                console.log('Opening folder ' + pathToOpen);
+            return openExplorer(pathToOpen)
+                .then(msg => console.log('\n' + chalk.green(msg)));
+        })
+        .catch(function (err) {
+            console.error(chalk.red('\nAn error occurred! (' + err.message + ')'));
+            process.exit(1);
+        });
+}
+
+function handleLocalCommand(params) {
+    if (params.verbose)
+        console.log('handling LOCAL command', params);
+    return findLocal(params.path, params)
+        .then(result => {
+            if (params.verbose)
+                console.info(chalk.green('\nFound LOCAL: ' + result));
+            return result;
+        })
+        .then(idmlPath => {
+            if (params.unpack && config.get('unpackPath')) {
+                if (params.verbose)
+                    console.log('Unpacking idml!');
+                // const unzipPath = path.resolve(`${config.get('unpackPath')}\\TEMPLATES\\${params.path}\\`);
+                const unzipPath = path.resolve(path.join(config.get('unpackPath'), 'LOCAL', params.path))
+                return decompress(idmlPath, unzipPath)
+                    .then(_ => unzipPath);
+            }
+            else if (params.unpack) {
+                console.warn('Did not unpack the idml! Missing config value for <unpackPath>');
             }
             return idmlPath;
         })
@@ -134,6 +169,15 @@ var argv = yargs(process.argv.slice(2))
             ['$0 template 1/Aktiv/Salgsoppgave_OneClick/Salgsoppgave -e dev -v -u', 'Find template in *DEV* environment (-e dev) and then unpack (-u) and open unpacked folder. Also with verbose (-v) logging.']
         ])
   }, handleTemplateCommand)
+  .command('local <path>', 'Locates an *IDML* from a Local path', function (yargs) {
+    return yargs
+        .positional('path', {
+            type: 'string'
+        }).example([
+            ['$0 local some-template', 'Find the template with path 61/VITEC_DEMO/Generell_salgsoppgavemal for environment specified with -e'],
+            ['$0 local 1ae6a737-442a-4fea-a4c1-40f91db5038a -e dev -v -u', 'Find template in *DEV* environment (-e dev) and then unpack (-u) and open unpacked folder. Also with verbose (-v) logging.']
+        ])
+  }, handleLocalCommand)
   .command('config [path]', 'Set (or get) base path for environment', function (yargs) {
     return yargs
         .positional('path', {
