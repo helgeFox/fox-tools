@@ -1,39 +1,41 @@
-const path = require('path');
-const fs = require('fs-extra');
-const Conf = require('conf').default;
+// const path = require('path');
+// const fs = require('fs-extra');
+// const Conf = require('conf').default;
+
+import path from 'path';
+import fs from 'fs-extra';
+import Conf from 'conf';
 
 const config = new Conf({projectName: 'fox-tools'});
 
-exports = module.exports = {
-    findInstance: function (guid, options) {
-        return buildOptions(options, 'INSTANCES', config.get('environments'))
-            .then(options => checkVpn(options.basePath))
-            .then(findInstanceImpl.bind(null, guid, options));
-    },
-    findTemplate: function (template, options) {
-        return buildOptions(options, 'TEMPLATES', config.get('environments'))
-            .then(options => checkVpn(options.basePath))
-            .then(findTemplateImpl.bind(null, template, options));
-    },
-    findLocal: async function (idml, options) {
-        if (/\/|\\/.test(options.path)) {
-            options.path = options.path.substring(options.path.lastIndexOf('/'))
-            options.path = options.path.substring(options.path.lastIndexOf('\\'))
-        }
-        if (options.path.endsWith('.idml'))
-            options.path = options.path.slice(0, -5)
-        let isURI = false
-        isURI = await fs.exists(idml)
-        if (isURI)
-            return path.resolve(idml)
-        isURI = await fs.exists(path.resolve(idml))
-        if (isURI)
-            return path.resolve(idml)
-        throw new Error(`Path "${idml}" does not exist`);
-    },
-};
+export function findInstance(guid, options) {
+    return buildOptions(options, 'INSTANCES', config.get('environments'))
+        .then(options => checkVpn(options.basePath))
+        .then(findInstanceImpl.bind(null, guid, options));
+}
+export function findTemplate(template, options:Record<any, any>) {
+    return buildOptions(options, 'TEMPLATES', config.get('environments'))
+        .then(options => checkVpn(options.basePath))
+        .then(findTemplateImpl.bind(null, template, options));
+}
+export async function findLocal(idml, options:Record<any, any>) {
+    if (/\/|\\/.test(options.path)) {
+        options.path = options.path.substring(options.path.lastIndexOf('/'))
+        options.path = options.path.substring(options.path.lastIndexOf('\\'))
+    }
+    if (options.path.endsWith('.idml'))
+        options.path = options.path.slice(0, -5)
+    let isURI = false
+    isURI = await fs.exists(idml)
+    if (isURI)
+        return path.resolve(idml)
+    isURI = await fs.exists(path.resolve(idml))
+    if (isURI)
+        return path.resolve(idml)
+    throw new Error(`Path "${idml}" does not exist`);
+}
 
-function buildOptions(options, templateType, environments) {
+function buildOptions(options, templateType, environments): Promise<Record<string, unknown>> {
     return new Promise((res, rej) => {
         options = options || {};
         const env = options.env || 'STAGE';

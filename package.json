@@ -2,6 +2,7 @@
   "name": "@foxpublish/fox-tools",
   "version": "1.0.4",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "bin": {
     "fox": "cli.js"
@@ -20,5 +21,11 @@
     "fs-extra": "^9.1.0",
     "meow": "^9.0.0",
     "yargs": "^16.2.2"
+  },
+  "devDependencies": {
+    "@types/decompress": "^4.2.7",
+    "@types/node": "^22.20.3",
+    "@types/yargs": "^17.0.35",
+    "typescript": "^7.0.2"
   }
 }
