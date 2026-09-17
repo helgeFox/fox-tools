@@ -1,10 +1,10 @@
-const Conf = require('conf');
+const Conf = require('conf').default;
 const exec = require('child_process').exec;
 const chalk = require('chalk');
 
 const {findInstance, findTemplate, findLocal} = require('./lib');
 
-const config = new Conf();
+const config = new Conf({projectName: 'fox-tools'});
 
 const openExplorer = function (result) {
     return new Promise((res, rej) => {

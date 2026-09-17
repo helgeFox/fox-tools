@@ -3,7 +3,7 @@
 
 const chalk = require('chalk');
 const yargs = require('yargs/yargs');
-const decompress = require('decompress');
+const decompress = require('@xhmikosr/decompress').default;
 const path = require('path');
 
 const {findInstance, findTemplate, findLocal, config, openExplorer} = require('.');
