@@ -15,7 +15,7 @@
     // "types": ["node"],
     // and npm install -D @types/node
 
-    "noImplicitAny": false,
+    "noImplicitAny": true,
 
     // Other Outputs
     "sourceMap": true,

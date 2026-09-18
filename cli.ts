@@ -6,27 +6,9 @@ import chalk from 'chalk'
 import decompress from '@xhmikosr/decompress'
 import path from 'node:path'
 
+import type { InstanceParams, TemplateParams, ConfigParams } from './lib/types.ts'
+
 import { findInstance, findTemplate, findLocal, config, openExplorer } from './index.js';
-
-type InstanceParams = {
-    verbose: boolean
-    guid: string
-    unpack: boolean
-}
-
-type TemplateParams = {
-    verbose: boolean
-    path: string
-    unpack: boolean
-}
-
-type ConfigParams = {
-    verbose: boolean
-    path: string
-    unpack: boolean
-    environment: string
-    for?: string
-}
 
 function handleInstanceCommand(params: InstanceParams) {
     if (params.verbose)
