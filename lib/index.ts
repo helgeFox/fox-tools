@@ -1,11 +1,11 @@
-import {
+export {
     findInstance,
     findTemplate,
     findLocal,
 } from './find-idml.js'
 
-export {
-    findInstance,
-    findTemplate,
-    findLocal,
-}
+export type {
+    InstanceParams,
+    TemplateParams,
+    ConfigParams,
+} from './types'

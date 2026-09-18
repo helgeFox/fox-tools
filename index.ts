@@ -1,7 +1,7 @@
 import Conf from 'conf';
 import { exec } from 'child_process';
 
-import { findInstance, findTemplate, findLocal } from './lib/index.js';
+import { findInstance, findTemplate, findLocal } from './lib';
 
 const config = new Conf({projectName: 'fox-tools'});
 
@@ -25,3 +25,5 @@ export {
     config,
     openExplorer
 }
+
+export type * from './lib'
